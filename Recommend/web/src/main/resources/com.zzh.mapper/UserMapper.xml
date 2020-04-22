@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace绑定一个对应的dao/mapper接口-->
+<mapper namespace="com.zzh.mapper.UserMapper">
+    <resultMap id="userMap" type="com.zzh.pojo.User">
+        <id column="user_id" property="userId"></id>
+        <result column="username" property="username"></result>
+        <result column="password" property="password"></result>
+        <result column="register_date" property="registerDate"></result>
+        <result column="gender" property="gender"></result>
+        <result column="birthday" property="birthday"></result>
+        <result column="authority" property="authority"></result>
+    </resultMap>
+
+    <!--id绑定的是接口里的方法， resultType绑定的是返回的实体类，通常写全限定类名-->
+    <select id="getUserById" resultMap="userMap">
+        <!--动态传参，parameterType是方法的参数类型，#{id}就是方法里的参数名-->
+        select * from user_info where user_id = #{userId};
+    </select>
+
+    <select id="getUserByName" resultMap="userMap">
+        select * from user_info where username = #{username};
+    </select>
+
+
+    <select id="getUsersByPage" resultMap="userMap">
+        select * from user_info where user_id >= #{start}*#{num}+1 limit #{num};
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select max(user_id) - min(user_id) from user_info;
+    </select>
+
+</mapper>

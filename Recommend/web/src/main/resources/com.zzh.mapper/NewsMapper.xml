@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace绑定一个对应的dao/mapper接口-->
+<mapper namespace="com.zzh.mapper.NewsMapper">
+    <!--id绑定的是接口里的方法， resultType绑定的是返回的实体类，通常写全限定类名-->
+    <resultMap id="newsMap" type="com.zzh.pojo.News">
+        <id column="news_id" property="newsId"></id>
+        <result column="url" property="url"></result>
+        <result column="publication_date" property="publicationDate"></result>
+        <result column="title" property="title"></result>
+        <result column="author" property="author"></result>
+        <result column="content" property="content"></result>
+        <result column="category" property="category"></result>
+    </resultMap>
+    <resultMap id="newsPartMap" type="com.zzh.pojo.NewsPart">
+        <id column="news_id" property="newsId"></id>
+        <result column="url" property="url"></result>
+        <result column="publication_date" property="publicationDate"></result>
+        <result column="title" property="title"></result>
+    </resultMap>
+    <resultMap id="newsShowingMap" type="com.zzh.pojo.NewsShowing">
+        <id column="news_id" property="newsId"></id>
+        <result column="url" property="url"></result>
+        <result column="publication_date" property="publicationDate"></result>
+        <result column="title" property="title"></result>
+        <result column="introduction" property="introduction"></result>
+    </resultMap>
+    <select id="getNewsPartByPage" resultMap="newsPartMap">
+        select news_id, url, publication_date, title
+        from news.news_info_20200420
+        where news_id >= #{start}*#{num}+1 limit #{num};
+    </select>
+
+    <select id="getNewsByPage" resultMap="newsMap">
+        select *
+        from news.news_info_20200420
+        where news_id >= #{start}*#{num}+1 limit #{num};
+    </select>
+
+    <select id="getNewsShowingByPage" resultMap="newsShowingMap">
+        select news_id, url, publication_date, title, concat(left(content, 150), "...") introduction
+        from news.news_info_20200420
+        where news_id >= #{start}*#{num}+1 limit #{num};
+    </select>
+
+    <select id="getNewsPartById" resultMap="newsPartMap">
+        select news_id, url, publication_date, title
+        from news.news_info_20200420
+        where news_id = #{newsId};
+    </select>
+
+    <select id="getNewsShowingById" resultMap="newsShowingMap">
+        select news_id, url, publication_date, title, concat(left(content, 150), "...") introduction
+        from news.news_info_20200420
+        where news_id = #{newsId};
+    </select>
+
+
+</mapper>

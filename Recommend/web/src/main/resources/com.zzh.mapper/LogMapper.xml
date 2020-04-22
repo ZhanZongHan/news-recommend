@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace绑定一个对应的dao/mapper接口-->
+<mapper namespace="com.zzh.mapper.LogMapper">
+    <resultMap id="LogMap" type="com.zzh.dto.BrowsingLogDto">
+        <id column="log_id" property="logId"></id>
+        <result column="user_id" property="userId"></result>
+        <result column="username" property="username"></result>
+        <result column="gender" property="gender"></result>
+        <result column="news_id" property="newsId"></result>
+        <result column="title" property="title"></result>
+        <result column="url" property="url"></result>
+        <result column="browsing_date" property="browsingDate"></result>
+    </resultMap>
+
+    <resultMap id="SimpleLogMap" type="com.zzh.pojo.BrowsingLog">
+        <id column="log_id" property="logId"></id>
+        <result column="user_id" property="userId"></result>
+        <result column="news_id" property="newsId"></result>
+        <result column="browsing_date" property="browsingDate"></result>
+    </resultMap>
+    <!--id绑定的是接口里的方法， resultType绑定的是返回的实体类，通常写全限定类名-->
+    <select id="getLogsByPage" resultMap="LogMap">
+        select t2.log_id, t2.user_id, username, gender, t2.news_id, title, url, browsing_date
+        from (news.user_info t1 join news.log_info t2 on t2.user_id=t1.user_id)
+        join news.news_info t3 on t3.news_id=t2.news_id
+        where t2.log_id >= #{start}*#{num}+1 limit #{num};
+    </select>
+
+    <select id="getLogsByUserId" resultMap="LogMap">
+        select t2.log_id, t2.user_id, username, gender, t2.news_id, title, url, browsing_date
+        from (news.user_info t1 join news.log_info t2 on t2.user_id=t1.user_id)
+        join news.news_info t3 on t3.news_id=t2.news_id
+        where t1.user_id=#{userId};
+    </select>
+
+    <select id="getLogsByUsername" resultMap="LogMap">
+        select t2.log_id, t2.user_id, username, gender, t2.news_id, title, url, browsing_date
+        from (news.user_info t1 join news.log_info t2 on t2.user_id=t1.user_id)
+        join news.news_info t3 on t3.news_id=t2.news_id
+        where t1.username=#{username};
+    </select>
+
+    <select id="getAllSimpleLogs" resultMap="SimpleLogMap">
+        select * from log_small;
+    </select>
+
+</mapper>
